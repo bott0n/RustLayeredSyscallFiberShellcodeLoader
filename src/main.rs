@@ -43,11 +43,11 @@ type OrgNtAllocateVirtualMemory = extern "system" fn(
 ) -> NTSTATUS;
 
 type OrgNtProtectVirtualMemory = extern "system" fn(
-    HANDLE,
-    base_address: *mut *mut c_void,
-    region_size: *mut usize,
-    new_protect: u32,
-    old_protect: *mut u32,
+    HANDLE,         // ProcessHandle
+    *mut PVOID,     // BaseAddress (in/out)
+    *mut SIZE_T,    // RegionSize (in/out)
+    ULONG,          // NewProtect
+    *mut ULONG      // OldProtect (out)
 ) -> NTSTATUS;
 
 fn main() { 
@@ -97,7 +97,6 @@ fn main() {
         }
 
         SwitchToFiber(fiber);
-        SwitchToFiber(main_fiber);
         destroy_hooks();
     }
 }
